@@ -233,19 +233,10 @@ BuildRequires: python3-pip
 
 Source: https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
 
-# Supply an RPM macro "py_byte_compile" for the python3-devel subpackage
-# to enable specfiles to selectively byte-compile individual files and paths
-# with different Python runtimes as necessary:
-Source3: macros.pybytecompile%{pybasever}
-
 # A simple script to check timestamps of bytecode files
 # Run in check section with Python that is currently being built
 # Written by bkabrda
 Source8: check-pyc-and-pyo-timestamps.py
-
-# Backward compatible no-op macro for system-python
-# Remove in Fedora 29
-Source9: macros.systempython
 
 # Desktop menu entry for idle3
 Source10: idle3.desktop
@@ -990,13 +981,6 @@ rm -rf %{buildroot}%{_bindir}/__pycache__
 # Fixup permissions for shared libraries from non-standard 555 to standard 755:
 find %{buildroot} -perm 555 -exec chmod 755 {} \;
 
-%if %{without flatpackage}
-# Install macros for rpm:
-mkdir -p %{buildroot}/%{_rpmconfigdir}/macros.d/
-install -m 644 %{SOURCE3} %{buildroot}/%{_rpmconfigdir}/macros.d/
-install -m 644 %{SOURCE9} %{buildroot}/%{_rpmconfigdir}/macros.d/
-%endif
-
 # Create "/usr/bin/python3-debug", a symlink to the python3 debug binary, to
 # avoid the user having to know the precise version and ABI flags.
 # See e.g. https://bugzilla.redhat.com/show_bug.cgi?id=676748
@@ -1384,8 +1368,6 @@ CheckPython optimized
 %if %{without flatpackage}
 %{_bindir}/python3-config
 %{_libdir}/pkgconfig/python3.pc
-%{_rpmconfigdir}/macros.d/macros.pybytecompile%{pybasever}
-%{_rpmconfigdir}/macros.d/macros.systempython
 %{_bindir}/pathfix.py
 %endif
 
