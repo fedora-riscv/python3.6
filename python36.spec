@@ -1098,7 +1098,6 @@ CheckPython optimized
 
 
 %files
-%defattr(-, root, root)
 %license LICENSE
 %doc README.rst
 
@@ -1120,7 +1119,6 @@ CheckPython optimized
 
 %if %{without flatpackage}
 %files libs
-%defattr(-,root,root,-)
 %license LICENSE
 %doc README.rst
 %endif
@@ -1350,7 +1348,6 @@ CheckPython optimized
 
 %if %{without flatpackage}
 %files devel
-%defattr(-,root,root)
 %{_bindir}/2to3
 # TODO: Remove 2to3-3.7 once rebased to 3.7
 %{_bindir}/2to3-%{pybasever}
@@ -1380,7 +1377,6 @@ CheckPython optimized
 
 %if %{without flatpackage}
 %files idle
-%defattr(-,root,root,755)
 
 %{_bindir}/idle*
 %else
@@ -1397,7 +1393,6 @@ CheckPython optimized
 
 %if %{without flatpackage}
 %files tkinter
-%defattr(-,root,root,755)
 %endif
 
 %{pylibdir}/tkinter
@@ -1415,7 +1410,6 @@ CheckPython optimized
 
 %if %{without flatpackage}
 %files test
-%defattr(-, root, root)
 %endif
 %{pylibdir}/ctypes/test
 %{pylibdir}/distutils/tests
@@ -1439,7 +1433,6 @@ CheckPython optimized
 %if %{with debug_build}
 %if %{without flatpackage}
 %files debug
-%defattr(-,root,root,-)
 %{_bindir}/python3-debug
 %endif
 
