@@ -197,11 +197,13 @@ BuildRequires: libGL-devel
 BuildRequires: libX11-devel
 BuildRequires: ncurses-devel
 
-BuildRequires: openssl-devel
 BuildRequires: pkgconfig
 BuildRequires: readline-devel
 BuildRequires: sqlite-devel
 BuildRequires: gdb
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1609291
+BuildRequires: compat-openssl10-devel
 
 BuildRequires: tar
 BuildRequires: tcl-devel
