@@ -198,8 +198,7 @@ BuildRequires: readline-devel
 BuildRequires: sqlite-devel
 BuildRequires: gdb
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=1609291
-BuildRequires: compat-openssl10-devel
+BuildRequires: openssl-devel
 
 BuildRequires: tar
 BuildRequires: tcl-devel
