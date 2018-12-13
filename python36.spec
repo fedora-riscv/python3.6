@@ -13,7 +13,7 @@ URL: https://www.python.org/
 
 #  WARNING  When rebasing to a new Python version,
 #           remember to update the python3-docs package as well
-Version: %{pybasever}.7
+Version: %{pybasever}.8
 Release: 1%{?dist}
 License: Python
 
@@ -454,8 +454,8 @@ Requires: gdbm-libs%{?_isa} >= 1:1.13
 Requires: python-setuptools-wheel
 Requires: python-pip-wheel
 %else
-Provides: bundled(python3-pip) = 10.0.1
-Provides: bundled(python3-setuptools) = 39.0.1
+Provides: bundled(python3-pip) = 18.1
+Provides: bundled(python3-setuptools) = 40.6.2
 %endif
 
 # There are files in the standard library that have python shebang.
@@ -622,8 +622,8 @@ Requires: redhat-rpm-config
 Requires: python-setuptools-wheel
 Requires: python-pip-wheel
 %else
-Provides: bundled(python3-pip) = 10.0.1
-Provides: bundled(python3-setuptools) = 39.0.1
+Provides: bundled(python3-pip) = 18.1
+Provides: bundled(python3-setuptools) = 40.6.2
 %endif
 
 # The description for the flat package
@@ -1557,6 +1557,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Thu Dec 27 2018 Miro Hrončok <mhroncok@redhat.com> - 3.6.8-1
+- Update to 3.6.8
+
 * Mon Oct 22 2018 Miro Hrončok <mhroncok@redhat.com> - 3.6.7-1
 - Update to 3.6.7
 
