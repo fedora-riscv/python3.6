@@ -14,7 +14,7 @@ URL: https://www.python.org/
 #  WARNING  When rebasing to a new Python version,
 #           remember to update the python3-docs package as well
 Version: %{pybasever}.8
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Python
 
 
@@ -1557,6 +1557,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Mon Jan 14 2019 Björn Esser <besser82@fedoraproject.org> - 3.6.8-2
+- Rebuilt for libcrypt.so.2 (#1666033)
+
 * Thu Dec 27 2018 Miro Hrončok <mhroncok@redhat.com> - 3.6.8-1
 - Update to 3.6.8
 
