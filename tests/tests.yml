@@ -15,3 +15,4 @@
     - gcc
     - python3-tox
     - python36
+    - glibc-all-langpacks # for locale tests
