@@ -14,7 +14,7 @@ URL: https://www.python.org/
 #  WARNING  When rebasing to a new Python version,
 #           remember to update the python3-docs package as well
 Version: %{pybasever}.8
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Python
 
 
@@ -1563,6 +1563,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Sat Feb 02 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.8-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Wed Jan 23 2019 Patrik Kopkan <pkopkan@redhat.com> - 3.6.8-3
 - fix for CVE-2019-5010 (#1666519, #1666520)
 
