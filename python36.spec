@@ -14,7 +14,7 @@ URL: https://www.python.org/
 #  WARNING  When rebasing to a new Python version,
 #           remember to update the python3-docs package as well
 Version: %{pybasever}.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: Python
 
 
@@ -1570,6 +1570,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Sun Feb 17 2019 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.6.8-5
+- Rebuild for readline 8.0
+
 * Sat Feb 02 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.8-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
