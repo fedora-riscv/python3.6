@@ -13,7 +13,10 @@ URL: https://www.python.org/
 
 #  WARNING  When rebasing to a new Python version,
 #           remember to update the python3-docs package as well
-Version: %{pybasever}.9
+%global general_version %{pybasever}.9
+#global prerel ...
+%global upstream_version %{general_version}%{?prerel}
+Version: %{general_version}%{?prerel:~%{prerel}}
 Release: 2%{?dist}
 License: Python
 
@@ -186,6 +189,7 @@ BuildRequires: gdbm-devel
 BuildRequires: glibc-all-langpacks
 BuildRequires: glibc-devel
 BuildRequires: gmp-devel
+BuildRequires: gnupg2
 BuildRequires: libappstream-glib
 BuildRequires: libffi-devel
 BuildRequires: libnsl2-devel
@@ -229,7 +233,9 @@ BuildRequires: python-pip-wheel
 # Source code and patches
 # =======================
 
-Source: https://www.python.org/ftp/python/%{version}/Python-%{version}%{?prerel}.tar.xz
+Source0: %{url}ftp/python/%{general_version}/Python-%{upstream_version}.tar.xz
+Source1: %{url}ftp/python/%{general_version}/Python-%{upstream_version}.tar.xz.asc
+Source2: %{url}static/files/pubkeys.txt
 
 # A simple script to check timestamps of bytecode files
 # Run in check section with Python that is currently being built
@@ -606,7 +612,8 @@ or older Fedora releases.
 # ======================================================
 
 %prep
-%setup -q -n Python-%{version}%{?prerel}
+%gpgverify -k2 -s1 -d0
+%setup -q -n Python-%{upstream_version}
 
 # Remove bundled libraries to ensure that we're using the system copy.
 rm -r Modules/expat
