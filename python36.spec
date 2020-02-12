@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Python
 
 
@@ -1535,6 +1535,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Wed Feb 12 2020 Miro Hrončok <mhroncok@redhat.com> - 3.6.10-3
+- Update the ensurepip module to work with setuptools >= 45
+
 * Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.10-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
