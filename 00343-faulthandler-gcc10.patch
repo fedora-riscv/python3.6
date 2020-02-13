@@ -1,0 +1,65 @@
+commit 5044c889dfced2f43e2cccb673d889a4882f6b3b
+Author: Miss Islington (bot) <31488909+miss-islington@users.noreply.github.com>
+Date:   Wed Dec 4 12:29:22 2019 -0800
+
+    bpo-38965: Fix faulthandler._stack_overflow() on GCC 10 (GH-17467)
+
+    Use the "volatile" keyword to prevent tail call optimization
+    on any compiler, rather than relying on compiler specific pragma.
+    (cherry picked from commit 8b787964e0a647caa0558b7c29ae501470d727d9)
+
+    Co-authored-by: Victor Stinner <vstinner@python.org>
+
+commit ac827edc493d3ac3f5b9b0cc353df1d4b418a9aa
+Author: Victor Stinner <vstinner@redhat.com>
+Date:   Wed Aug 14 23:35:27 2019 +0200
+
+    bpo-21131: Fix faulthandler.register(chain=True) stack (GH-15276)
+
+    faulthandler now allocates a dedicated stack of SIGSTKSZ*2 bytes,
+    instead of just SIGSTKSZ bytes. Calling the previous signal handler
+    in faulthandler signal handler uses more than SIGSTKSZ bytes of stack
+    memory on some platforms.
+
+diff --git a/Modules/faulthandler.c b/Modules/faulthandler.c
+index 890c645..fac662a 100644
+--- a/Modules/faulthandler.c
++++ b/Modules/faulthandler.c
+@@ -1091,18 +1091,14 @@ faulthandler_fatal_error_py(PyObject *self, PyObject *args)
+ #if defined(HAVE_SIGALTSTACK) && defined(HAVE_SIGACTION)
+ #define FAULTHANDLER_STACK_OVERFLOW
+
+-#ifdef __INTEL_COMPILER
+-   /* Issue #23654: Turn off ICC's tail call optimization for the
+-    * stack_overflow generator. ICC turns the recursive tail call into
+-    * a loop. */
+-#  pragma intel optimization_level 0
+-#endif
+-static
+-uintptr_t
++static uintptr_t
+ stack_overflow(uintptr_t min_sp, uintptr_t max_sp, size_t *depth)
+ {
+-    /* allocate 4096 bytes on the stack at each call */
+-    unsigned char buffer[4096];
++    /* Allocate (at least) 4096 bytes on the stack at each call.
++
++       bpo-23654, bpo-38965: use volatile keyword to prevent tail call
++       optimization. */
++    volatile unsigned char buffer[4096];
+     uintptr_t sp = (uintptr_t)&buffer;
+     *depth += 1;
+     if (sp < min_sp || max_sp < sp)
+@@ -1333,7 +1329,11 @@ int _PyFaulthandler_Init(void)
+      * be able to allocate memory on the stack, even on a stack overflow. If it
+      * fails, ignore the error. */
+     stack.ss_flags = 0;
+-    stack.ss_size = SIGSTKSZ;
++    /* bpo-21131: allocate dedicated stack of SIGSTKSZ*2 bytes, instead of just
++       SIGSTKSZ bytes. Calling the previous signal handler in faulthandler
++       signal handler uses more than SIGSTKSZ bytes of stack memory on some
++       platforms. */
++    stack.ss_size = SIGSTKSZ * 2;
+     stack.ss_sp = PyMem_Malloc(stack.ss_size);
+     if (stack.ss_sp != NULL) {
+         err = sigaltstack(&stack, &old_stack);
