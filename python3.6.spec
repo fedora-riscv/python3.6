@@ -7,7 +7,7 @@
 # pybasever without the dot:
 %global pyshortver 36
 
-Name: python%{pyshortver}
+Name: python%{pybasever}
 Summary: Version %{pybasever} of the Python interpreter
 URL: https://www.python.org/
 
@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Python
 
 
@@ -384,9 +384,9 @@ Patch343: 00343-faulthandler-gcc10.patch
 # Descriptions, and metadata for subpackages
 # ==========================================
 
-# People might want to dnf install pythonX.Y instead of pythonXY;
-# we enable this in both flat and nonflat package.
-Provides: python%{pybasever} = %{version}-%{release}
+# Provide and obsolete the old python3X name
+Provides:  python%{pyshortver} = %{version}-%{release}
+Obsoletes: python%{pyshortver} < %{version}-%{release}
 
 %if %{without flatpackage}
 
@@ -1535,6 +1535,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Wed May 06 2020 Miro Hrončok <mhroncok@redhat.com> - 3.6.10-4
+- Rename from python36 to python3.6
+
 * Wed Feb 12 2020 Miro Hrončok <mhroncok@redhat.com> - 3.6.10-3
 - Update the ensurepip module to work with setuptools >= 45
 

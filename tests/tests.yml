@@ -14,5 +14,5 @@
     required_packages:
     - gcc
     - python3-tox
-    - python36
+    - python3.6
     - glibc-all-langpacks # for locale tests
