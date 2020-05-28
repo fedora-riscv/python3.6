@@ -200,3 +200,19 @@ index 0f2dfc4..da37896 100644
                                       ] )
  
          if (ssl_incs is not None and
+diff --git a/configure.ac b/configure.ac
+index 01c66fe..1e6d515 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -4772,9 +4772,9 @@ AC_MSG_RESULT($LDVERSION)
+ dnl define LIBPL after ABIFLAGS and LDVERSION is defined.
+ AC_SUBST(PY_ENABLE_SHARED)
+ if test x$PLATFORM_TRIPLET = x; then
+-  LIBPL='$(prefix)'"/lib/python${VERSION}/config-${LDVERSION}"
++  LIBPL='$(prefix)'"/lib64/python${VERSION}/config-${LDVERSION}"
+ else
+-  LIBPL='$(prefix)'"/lib/python${VERSION}/config-${LDVERSION}-${PLATFORM_TRIPLET}"
++  LIBPL='$(prefix)'"/lib64/python${VERSION}/config-${LDVERSION}-${PLATFORM_TRIPLET}"
+ fi
+ AC_SUBST(LIBPL)
+

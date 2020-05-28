@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: Python
 
 
@@ -321,11 +321,6 @@ Patch178: 00178-dont-duplicate-flags-in-sysconfig.patch
 # Instead of bundled wheels, use our RPM packaged wheels from
 # /usr/share/python-wheels
 Patch189: 00189-use-rpm-wheels.patch
-
-# 00205 #
-# LIBPL variable in makefile takes LIBPL from configure.ac
-# but the LIBPL variable defined there doesn't respect libdir macro
-Patch205: 00205-make-libpl-respect-lib64.patch
 
 # 00251
 # Set values of prefix and exec_prefix in distutils install command
@@ -651,7 +646,6 @@ rm -r Modules/zlib
 rm Lib/ensurepip/_bundled/*.whl
 %endif
 
-%patch205 -p1
 %patch251 -p1
 %patch262 -p1
 %patch274 -p1
@@ -1535,6 +1529,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Thu May 28 2020 Victor Stinner <vstinner@python.org> - 3.6.10-5
+- Fix python3-config --configdir (rhbz#1772988).
+
 * Wed May 06 2020 Miro Hrončok <mhroncok@redhat.com> - 3.6.10-4
 - Rename from python36 to python3.6
 
