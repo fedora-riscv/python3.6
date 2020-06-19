@@ -1,7 +1,19 @@
-diff -up Python-3.3.0b1/Lib/test/test_socket.py.disable-test_socket-in-rpm-builds Python-3.3.0b1/Lib/test/test_socket.py
---- Python-3.3.0b1/Lib/test/test_socket.py.disable-test_socket-in-rpm-builds	2012-07-24 15:02:30.823355067 -0400
-+++ Python-3.3.0b1/Lib/test/test_socket.py	2012-07-24 15:08:13.021354999 -0400
-@@ -2188,6 +2188,7 @@ class RecvmsgGenericStreamTests(RecvmsgG
+From f211c52df798ffad41477dc30b3de2b6442873b6 Mon Sep 17 00:00:00 2001
+From: David Malcolm <dmalcolm@redhat.com>
+Date: Fri, 19 Jun 2020 16:58:24 +0200
+Subject: [PATCH] 00163: Disable parts of test_socket in RPM build
+
+Some tests within test_socket fail intermittently when run inside Koji;
+disable them using unittest._skipInRpmBuild
+---
+ Lib/test/test_socket.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Lib/test/test_socket.py b/Lib/test/test_socket.py
+index 95c3938ac2..abb2356f47 100644
+--- a/Lib/test/test_socket.py
++++ b/Lib/test/test_socket.py
+@@ -2505,6 +2505,7 @@ class RecvmsgGenericStreamTests(RecvmsgGenericTests):
      # Tests which require a stream socket and can use either recvmsg()
      # or recvmsg_into().
  
@@ -9,3 +21,6 @@ diff -up Python-3.3.0b1/Lib/test/test_socket.py.disable-test_socket-in-rpm-build
      def testRecvmsgEOF(self):
          # Receive end-of-stream indicator (b"", peer socket closed).
          msg, ancdata, flags, addr = self.doRecvmsg(self.serv_sock, 1024)
+-- 
+2.26.2
+

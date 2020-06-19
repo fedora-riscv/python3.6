@@ -1,34 +1,28 @@
-commit 5044c889dfced2f43e2cccb673d889a4882f6b3b
-Author: Miss Islington (bot) <31488909+miss-islington@users.noreply.github.com>
-Date:   Wed Dec 4 12:29:22 2019 -0800
+From 7da16b28ff5817714a565f7f5c51cccee1e25818 Mon Sep 17 00:00:00 2001
+From: Victor Stinner <vstinner@python.org>
+Date: Fri, 19 Jun 2020 17:16:05 +0200
+Subject: [PATCH] 00343: Fix test_faulthandler on GCC 10
 
-    bpo-38965: Fix faulthandler._stack_overflow() on GCC 10 (GH-17467)
+bpo-38965: Fix faulthandler._stack_overflow() on GCC 10
+Fixed upstream and backported from the 3.7 branch:
+https://bugs.python.org/issue38965
+https://github.com/python/cpython/commit/f4a21d3b239bf4f4e4e2a8a5936b9b040645b246
 
-    Use the "volatile" keyword to prevent tail call optimization
-    on any compiler, rather than relying on compiler specific pragma.
-    (cherry picked from commit 8b787964e0a647caa0558b7c29ae501470d727d9)
-
-    Co-authored-by: Victor Stinner <vstinner@python.org>
-
-commit ac827edc493d3ac3f5b9b0cc353df1d4b418a9aa
-Author: Victor Stinner <vstinner@redhat.com>
-Date:   Wed Aug 14 23:35:27 2019 +0200
-
-    bpo-21131: Fix faulthandler.register(chain=True) stack (GH-15276)
-
-    faulthandler now allocates a dedicated stack of SIGSTKSZ*2 bytes,
-    instead of just SIGSTKSZ bytes. Calling the previous signal handler
-    in faulthandler signal handler uses more than SIGSTKSZ bytes of stack
-    memory on some platforms.
+bpo-21131: Fix faulthandler.register(chain=True) stack (GH-15276)
+https://bugs.python.org/issue21131
+https://github.com/python/cpython/commit/ac827edc493d3ac3f5b9b0cc353df1d4b418a9aa
+---
+ Modules/faulthandler.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/Modules/faulthandler.c b/Modules/faulthandler.c
-index 890c645..fac662a 100644
+index 890c64577c..fac662afc3 100644
 --- a/Modules/faulthandler.c
 +++ b/Modules/faulthandler.c
 @@ -1091,18 +1091,14 @@ faulthandler_fatal_error_py(PyObject *self, PyObject *args)
  #if defined(HAVE_SIGALTSTACK) && defined(HAVE_SIGACTION)
  #define FAULTHANDLER_STACK_OVERFLOW
-
+ 
 -#ifdef __INTEL_COMPILER
 -   /* Issue #23654: Turn off ICC's tail call optimization for the
 -    * stack_overflow generator. ICC turns the recursive tail call into
@@ -63,3 +57,6 @@ index 890c645..fac662a 100644
      stack.ss_sp = PyMem_Malloc(stack.ss_size);
      if (stack.ss_sp != NULL) {
          err = sigaltstack(&stack, &old_stack);
+-- 
+2.26.2
+

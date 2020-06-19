@@ -1,7 +1,22 @@
-diff -up Python-3.2.3/Lib/ctypes/__init__.py.rhbz814391 Python-3.2.3/Lib/ctypes/__init__.py
---- Python-3.2.3/Lib/ctypes/__init__.py.rhbz814391	2012-04-20 15:12:49.017867692 -0400
-+++ Python-3.2.3/Lib/ctypes/__init__.py	2012-04-20 15:15:09.501111408 -0400
-@@ -275,11 +275,6 @@ def _reset_cache():
+From 72c7d5be3893e3b77701c77c84247ea0062dd089 Mon Sep 17 00:00:00 2001
+From: David Malcolm <dmalcolm@redhat.com>
+Date: Fri, 19 Jun 2020 16:02:24 +0200
+Subject: [PATCH] 00155: avoid allocating thunks in ctypes unless absolutely
+ necessary
+
+Avoid allocating thunks in ctypes unless absolutely necessary, to avoid
+generating SELinux denials on "import ctypes" and "import uuid" when
+embedding Python within httpd
+See https://bugzilla.redhat.com/show_bug.cgi?id=814391
+---
+ Lib/ctypes/__init__.py | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/Lib/ctypes/__init__.py b/Lib/ctypes/__init__.py
+index f8709683fb..2ffe440150 100644
+--- a/Lib/ctypes/__init__.py
++++ b/Lib/ctypes/__init__.py
+@@ -266,11 +266,6 @@ def _reset_cache():
      # _SimpleCData.c_char_p_from_param
      POINTER(c_char).from_param = c_char_p.from_param
      _pointer_type_cache[None] = c_void_p
@@ -13,3 +28,6 @@ diff -up Python-3.2.3/Lib/ctypes/__init__.py.rhbz814391 Python-3.2.3/Lib/ctypes/
  
  def create_unicode_buffer(init, size=None):
      """create_unicode_buffer(aString) -> character array
+-- 
+2.26.2
+

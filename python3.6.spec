@@ -13,11 +13,11 @@ URL: https://www.python.org/
 
 #  WARNING  When rebasing to a new Python version,
 #           remember to update the python3-docs package as well
-%global general_version %{pybasever}.10
-#global prerel ...
+%global general_version %{pybasever}.11
+%global prerel rc1
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 5%{?dist}
+Release: 1%{?dist}
 License: Python
 
 
@@ -1529,6 +1529,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Fri Jun 19 2020 Petr Viktorin <pviktori@redhat.com> - 3.6.11-1
+- Update to 3.6.11rc1
+
 * Thu May 28 2020 Victor Stinner <vstinner@python.org> - 3.6.10-5
 - Fix python3-config --configdir (rhbz#1772988).
 

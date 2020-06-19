@@ -1,8 +1,32 @@
+From f4d25a8fcf43f89fb58e6d288e50d993dd84afb6 Mon Sep 17 00:00:00 2001
+From: David Malcolm <dmalcolm@redhat.com>
+Date: Fri, 19 Jun 2020 16:05:07 +0200
+Subject: [PATCH] 00170: In debug builds, try to print repr() when a C-level
+ assert fails
+
+In debug builds, try to print repr() when a C-level assert fails in the
+garbage collector (typically indicating a reference-counting error
+somewhere else e.g in an extension module)
+The new macros/functions within gcmodule.c are hidden to avoid exposing
+them within the extension API.
+Sent upstream: http://bugs.python.org/issue9263
+See https://bugzilla.redhat.com/show_bug.cgi?id=614680
+
+Co-Authored-By: David Malcolm <dmalcolm@redhat.com>
+Co-Authored-By: Charalampos Stratakis <cstratak@redhat.com>
+Co-Authored-By: Robert Kuska <rkuska@redhat.com>
+---
+ Include/object.h    | 43 ++++++++++++++++++++++++++++++++++++++
+ Lib/test/test_gc.py | 50 ++++++++++++++++++++++++++++++++++++++++++++-
+ Modules/gcmodule.c  | 44 +++++++++++++++++++++++----------------
+ Objects/object.c    | 29 ++++++++++++++++++++++++++
+ 4 files changed, 147 insertions(+), 19 deletions(-)
+
 diff --git a/Include/object.h b/Include/object.h
-index 63e37b8..613b26c 100644
+index deac940972..fe7469bfb6 100644
 --- a/Include/object.h
 +++ b/Include/object.h
-@@ -1071,6 +1071,49 @@ PyAPI_FUNC(void)
+@@ -1072,6 +1072,49 @@ PyAPI_FUNC(void)
  _PyObject_DebugTypeStats(FILE *out);
  #endif /* ifndef Py_LIMITED_API */
  
@@ -53,7 +77,7 @@ index 63e37b8..613b26c 100644
  }
  #endif
 diff --git a/Lib/test/test_gc.py b/Lib/test/test_gc.py
-index 7e82b24..4497b8f 100644
+index 7e82b242da..4497b8f456 100644
 --- a/Lib/test/test_gc.py
 +++ b/Lib/test/test_gc.py
 @@ -1,10 +1,12 @@
@@ -131,7 +155,7 @@ index 7e82b24..4497b8f 100644
      def setUp(self):
          gc.enable()
 diff --git a/Modules/gcmodule.c b/Modules/gcmodule.c
-index 3bddc40..0cc24f7 100644
+index 3bddc403da..0cc24f7e6c 100644
 --- a/Modules/gcmodule.c
 +++ b/Modules/gcmodule.c
 @@ -342,7 +342,8 @@ update_refs(PyGC_Head *containers)
@@ -270,10 +294,10 @@ index 3bddc40..0cc24f7 100644
              return -1;
      }
 diff --git a/Objects/object.c b/Objects/object.c
-index defff55..a50697d 100644
+index e1a0569ab9..9a28521dc4 100644
 --- a/Objects/object.c
 +++ b/Objects/object.c
-@@ -2030,6 +2030,35 @@ _PyTrash_thread_destroy_chain(void)
+@@ -2062,6 +2062,35 @@ _PyTrash_thread_destroy_chain(void)
      }
  }
  
@@ -309,3 +333,6 @@ index defff55..a50697d 100644
  #ifndef Py_TRACE_REFS
  /* For Py_LIMITED_API, we need an out-of-line version of _Py_Dealloc.
     Define this here, so we can undefine the macro. */
+-- 
+2.26.2
+

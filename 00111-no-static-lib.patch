@@ -1,5 +1,27 @@
+From 6b5abb117f6e665a34e901ba7ee50a1a8decdb34 Mon Sep 17 00:00:00 2001
+From: David Malcolm <dmalcolm@redhat.com>
+Date: Mon, 18 Jan 2010 17:59:07 +0000
+Subject: [PATCH] 00111: Don't try to build a libpythonMAJOR.MINOR.a
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Downstream only: not appropriate for upstream.
+
+See https://bugzilla.redhat.com/show_bug.cgi?id=556092
+
+Co-authored-by: David Malcolm <dmalcolm@redhat.com>
+Co-authored-by: Bohuslav Kabrda <bkabrda@redhat.com>
+Co-authored-by: Matej Stuchlik <mstuchli@redhat.com>
+Co-authored-by: Robert Kuska <rkuska@redhat.com>
+Co-authored-by: Charalampos Stratakis <cstratak@redhat.com>
+Co-authored-by: Miro Hrončok <miro@hroncok.cz>
+---
+ Makefile.pre.in | 21 ++-------------------
+ 1 file changed, 2 insertions(+), 19 deletions(-)
+
 diff --git a/Makefile.pre.in b/Makefile.pre.in
-index 9cd482f..b074b26 100644
+index 9cd482fc38..b074b26039 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
 @@ -549,7 +549,7 @@ clinic: check-clean-src $(srcdir)/Modules/_blake2/blake2s_impl.c
@@ -51,3 +73,6 @@ index 9cd482f..b074b26 100644
  	$(INSTALL_DATA) Modules/config.c $(DESTDIR)$(LIBPL)/config.c
  	$(INSTALL_DATA) Programs/python.o $(DESTDIR)$(LIBPL)/python.o
  	$(INSTALL_DATA) $(srcdir)/Modules/config.c.in $(DESTDIR)$(LIBPL)/config.c.in
+-- 
+2.26.2
+

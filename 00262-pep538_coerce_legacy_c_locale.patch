@@ -1,5 +1,36 @@
+From 0944f5b62e3227e2330312011a5f7ddfa7ad86f9 Mon Sep 17 00:00:00 2001
+From: Nick Coghlan <ncoghlan@redhat.com>
+Date: Fri, 19 Jun 2020 17:02:52 +0200
+Subject: [PATCH] 00262: PEP538 - Coerce legacy C locale
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Backport of PEP 538: Coercing the legacy C locale to a UTF-8 based locale
+https://www.python.org/dev/peps/pep-0538/
+Fedora Change: https://fedoraproject.org/wiki/Changes/python3_c.utf-8_locale
+Original proposal: https://bugzilla.redhat.com/show_bug.cgi?id=1404918
+
+Co-Authored-By: Nick Coghlan <ncoghlan@redhat.com>
+Co-Authored-By: Charalampos Stratakis <cstratak@redhat.com>
+Co-Authored-By: Iryna Shcherbina <ishcherb@redhat.com>
+Co-Authored-By: Miro Hrončok <miro@hroncok.cz>
+---
+ Doc/using/cmdline.rst              |  39 +++
+ Lib/test/support/script_helper.py  |  56 +++--
+ Lib/test/test_c_locale_coercion.py | 371 +++++++++++++++++++++++++++++
+ Lib/test/test_cmd_line.py          |   1 +
+ Lib/test/test_sys.py               |   1 +
+ Modules/main.c                     |   6 +-
+ Programs/_testembed.c              |   1 +
+ Programs/python.c                  |  37 +++
+ Python/pylifecycle.c               | 196 ++++++++++++++-
+ configure.ac                       |  34 +++
+ 10 files changed, 708 insertions(+), 34 deletions(-)
+ create mode 100644 Lib/test/test_c_locale_coercion.py
+
 diff --git a/Doc/using/cmdline.rst b/Doc/using/cmdline.rst
-index d14793a..65aa3ad 100644
+index d14793a108..65aa3ad0f5 100644
 --- a/Doc/using/cmdline.rst
 +++ b/Doc/using/cmdline.rst
 @@ -728,6 +728,45 @@ conflict.
@@ -49,7 +80,7 @@ index d14793a..65aa3ad 100644
  ~~~~~~~~~~~~~~~~~~~~
  
 diff --git a/Lib/test/support/script_helper.py b/Lib/test/support/script_helper.py
-index 507dc48..c3cb720 100644
+index 507dc48848..c3cb720be1 100644
 --- a/Lib/test/support/script_helper.py
 +++ b/Lib/test/support/script_helper.py
 @@ -56,8 +56,35 @@ def interpreter_requires_environment():
@@ -124,7 +155,7 @@ index 507dc48..c3cb720 100644
  def assert_python_ok(*args, **env_vars):
 diff --git a/Lib/test/test_c_locale_coercion.py b/Lib/test/test_c_locale_coercion.py
 new file mode 100644
-index 0000000..635c98f
+index 0000000000..635c98face
 --- /dev/null
 +++ b/Lib/test/test_c_locale_coercion.py
 @@ -0,0 +1,371 @@
@@ -500,7 +531,7 @@ index 0000000..635c98f
 +if __name__ == "__main__":
 +    test_main()
 diff --git a/Lib/test/test_cmd_line.py b/Lib/test/test_cmd_line.py
-index 38156b4..5922ed9 100644
+index 38156b4926..5922ed917c 100644
 --- a/Lib/test/test_cmd_line.py
 +++ b/Lib/test/test_cmd_line.py
 @@ -153,6 +153,7 @@ class CmdLineTest(unittest.TestCase):
@@ -512,7 +543,7 @@ index 38156b4..5922ed9 100644
              b'import locale; '
              b'print(ascii("' + undecodable + b'"), '
 diff --git a/Lib/test/test_sys.py b/Lib/test/test_sys.py
-index 7866a5c..b41239a 100644
+index 7866a5c005..b41239ab7a 100644
 --- a/Lib/test/test_sys.py
 +++ b/Lib/test/test_sys.py
 @@ -680,6 +680,7 @@ class SysModuleTest(unittest.TestCase):
@@ -524,7 +555,7 @@ index 7866a5c..b41239a 100644
              'import sys',
              'def dump(name):',
 diff --git a/Modules/main.c b/Modules/main.c
-index 585d696..96d8be4 100644
+index 585d6965dd..96d8be4685 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -107,7 +107,11 @@ static const char usage_6[] =
@@ -541,7 +572,7 @@ index 585d696..96d8be4 100644
  static int
  usage(int exitcode, const wchar_t* program)
 diff --git a/Programs/_testembed.c b/Programs/_testembed.c
-index 813cf30..2a64092 100644
+index 813cf307bd..2a640926c0 100644
 --- a/Programs/_testembed.c
 +++ b/Programs/_testembed.c
 @@ -1,4 +1,5 @@
@@ -551,7 +582,7 @@ index 813cf30..2a64092 100644
  #include <stdio.h>
  
 diff --git a/Programs/python.c b/Programs/python.c
-index a7afbc7..03f8295 100644
+index a7afbc774b..03f8295045 100644
 --- a/Programs/python.c
 +++ b/Programs/python.c
 @@ -15,6 +15,21 @@ wmain(int argc, wchar_t **argv)
@@ -623,7 +654,7 @@ index a7afbc7..03f8295 100644
      for (i = 0; i < argc; i++) {
          PyMem_RawFree(argv_copy2[i]);
 diff --git a/Python/pylifecycle.c b/Python/pylifecycle.c
-index ecfdfee..4fee178 100644
+index 0ebf9c7029..0b985bf78b 100644
 --- a/Python/pylifecycle.c
 +++ b/Python/pylifecycle.c
 @@ -167,6 +167,7 @@ Py_SetStandardStreamEncoding(const char *encoding, const char *errors)
@@ -839,7 +870,7 @@ index ecfdfee..4fee178 100644
  #endif
  
      if ((p = Py_GETENV("PYTHONDEBUG")) && *p != '\0')
-@@ -1247,12 +1433,8 @@ initstdio(void)
+@@ -1250,12 +1436,8 @@ initstdio(void)
              }
          }
          if (!errors && !(pythonioencoding && *pythonioencoding)) {
@@ -855,10 +886,10 @@ index ecfdfee..4fee178 100644
      }
  
 diff --git a/configure.ac b/configure.ac
-index 3f2459a..7444486 100644
+index 7bf4c6fb4c..f764536d65 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -3360,6 +3360,40 @@ then
+@@ -3417,6 +3417,40 @@ then
  fi
  AC_MSG_RESULT($with_pymalloc)
  
@@ -899,3 +930,6 @@ index 3f2459a..7444486 100644
  # Check for Valgrind support
  AC_MSG_CHECKING([for --with-valgrind])
  AC_ARG_WITH([valgrind],
+-- 
+2.26.2
+

@@ -1,5 +1,25 @@
+From 8c79d1eeb61fdb3e9bc58be70a8a9050fe83096f Mon Sep 17 00:00:00 2001
+From: Christian Heimes <christian@python.org>
+Date: Fri, 19 Jun 2020 17:13:03 +0200
+Subject: [PATCH] 00294: Define TLS cipher suite on build time
+
+Define TLS cipher suite on build time depending
+on the OpenSSL default cipher suite selection.
+Fixed upstream on CPython's 3.7 branch:
+https://bugs.python.org/issue31429
+See also: https://bugzilla.redhat.com/show_bug.cgi?id=1489816
+
+Co-Authored-By: Christian Heimes <christian@python.org>
+Co-Authored-By: Charalampos Stratakis <cstratak@redhat.com>
+---
+ Lib/ssl.py           | 48 ++------------------------------------------
+ Lib/test/test_ssl.py | 16 ++++++++++++++-
+ Modules/_ssl.c       | 35 +++++++++++++++++++++++++++++++-
+ configure.ac         | 36 +++++++++++++++++++++++++++++++++
+ 4 files changed, 87 insertions(+), 48 deletions(-)
+
 diff --git a/Lib/ssl.py b/Lib/ssl.py
-index 58d3e93..0114387 100644
+index 58d3e93922..0114387c57 100644
 --- a/Lib/ssl.py
 +++ b/Lib/ssl.py
 @@ -116,6 +116,7 @@ except ImportError:
@@ -79,7 +99,7 @@ index 58d3e93..0114387 100644
      if cafile or capath or cadata:
          context.load_verify_locations(cafile, capath, cadata)
 diff --git a/Lib/test/test_ssl.py b/Lib/test/test_ssl.py
-index 74adebc..510bb09 100644
+index 74adebc0fb..510bb09501 100644
 --- a/Lib/test/test_ssl.py
 +++ b/Lib/test/test_ssl.py
 @@ -19,6 +19,7 @@ import weakref
@@ -120,7 +140,7 @@ index 74adebc..510bb09 100644
      def test_get_ciphers(self):
          ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
 diff --git a/Modules/_ssl.c b/Modules/_ssl.c
-index 7365630..ec366f0 100644
+index 7365630a5e..ec366f019d 100644
 --- a/Modules/_ssl.c
 +++ b/Modules/_ssl.c
 @@ -238,6 +238,31 @@ SSL_SESSION_get_ticket_lifetime_hint(const SSL_SESSION *s)
@@ -180,7 +200,7 @@ index 7365630..ec366f0 100644
                              PY_SSL_ERROR_ZERO_RETURN);
      PyModule_AddIntConstant(m, "SSL_ERROR_WANT_READ",
 diff --git a/configure.ac b/configure.ac
-index f986875..c071ec3 100644
+index f2c455c8d9..619aa215e9 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -5663,6 +5663,42 @@ if test "$have_getrandom" = yes; then
@@ -226,3 +246,6 @@ index f986875..c071ec3 100644
  # generate output files
  AC_CONFIG_FILES(Makefile.pre Modules/Setup.config Misc/python.pc Misc/python-config.sh)
  AC_CONFIG_FILES([Modules/ld_so_aix], [chmod +x Modules/ld_so_aix])
+-- 
+2.26.2
+
