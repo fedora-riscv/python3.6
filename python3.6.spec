@@ -17,7 +17,7 @@ URL: https://www.python.org/
 %global prerel rc1
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Python
 
 
@@ -310,12 +310,6 @@ Patch163: 00163-disable-parts-of-test_socket-in-rpm-build.patch
 # Sent upstream: http://bugs.python.org/issue9263
 # See https://bugzilla.redhat.com/show_bug.cgi?id=614680
 Patch170: 00170-gc-assertions.patch
-
-# 00178 #
-# Don't duplicate various FLAGS in sysconfig values
-# http://bugs.python.org/issue17679
-# Does not affect python2 AFAICS (different sysconfig values initialization)
-Patch178: 00178-dont-duplicate-flags-in-sysconfig.patch
 
 # 00189 #
 # Instead of bundled wheels, use our RPM packaged wheels from
@@ -639,7 +633,6 @@ rm -r Modules/zlib
 %patch160 -p1
 %patch163 -p1
 %patch170 -p1
-%patch178 -p1
 
 %if %{with rpmwheels}
 %patch189 -p1
@@ -1535,6 +1528,11 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Thu Jun 25 2020 Victor Stinner <vstinner@python.org> - 3.6.11~rc1-2
+- Remove downstream 00178-dont-duplicate-flags-in-sysconfig.patch which
+  introduced a bug on distutils.sysconfig.get_config_var('LIBPL')
+  (rhbz#1851008).
+
 * Fri Jun 19 2020 Petr Viktorin <pviktori@redhat.com> - 3.6.11-1
 - Update to 3.6.11rc1
 
