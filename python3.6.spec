@@ -1030,6 +1030,12 @@ CheckPython() {
   ConfName=$1
   ConfDir=$(pwd)/build/$ConfName
 
+  # The "modern" security policies are not handled gracefully by the test suite
+  # of an older Python version. This is fixed upstream for 3.7+.
+  # Instead of fixing the tests, we disable the system wide policy via:
+  export OPENSSL_CONF=/non-existing-file
+  # This is a compromise between skipping and fixing the ssl tests.
+
   echo STARTING: CHECKING OF PYTHON FOR CONFIGURATION: $ConfName
 
   # Note that we're running the tests using the version of the code in the
