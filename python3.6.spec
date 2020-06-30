@@ -14,10 +14,10 @@ URL: https://www.python.org/
 #  WARNING  When rebasing to a new Python version,
 #           remember to update the python3-docs package as well
 %global general_version %{pybasever}.11
-%global prerel rc1
+#global prerel rc1
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: Python
 
 
@@ -1528,6 +1528,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Tue Jun 30 2020 Petr Viktorin <pviktori@redhat.com> - 3.6.11-1
+- Update to 3.6.11 final
+
 * Thu Jun 25 2020 Victor Stinner <vstinner@python.org> - 3.6.11~rc1-2
 - Remove downstream 00178-dont-duplicate-flags-in-sysconfig.patch which
   introduced a bug on distutils.sysconfig.get_config_var('LIBPL')
