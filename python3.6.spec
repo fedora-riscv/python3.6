@@ -315,6 +315,12 @@ Patch170: 00170-gc-assertions.patch
 # Instead of bundled wheels, use our RPM packaged wheels from
 # /usr/share/python-wheels
 Patch189: 00189-use-rpm-wheels.patch
+# The following versions of setuptools/pip are bundled when this patch is not applied.
+# The versions are written in Lib/ensurepip/__init__.py, this patch removes them.
+# When the bundled setuptools/pip wheel is updated, the patch no longer applies cleanly.
+# In such cases, the patch needs to be amended and the versions updated here:
+%global pip_version 18.1
+%global setuptools_version 40.6.2
 
 # 00251
 # Set values of prefix and exec_prefix in distutils install command
@@ -446,8 +452,8 @@ Summary:        Python runtime libraries
 Requires: python-setuptools-wheel
 Requires: python-pip-wheel
 %else
-Provides: bundled(python3-pip) = 18.1
-Provides: bundled(python3-setuptools) = 40.6.2
+Provides: bundled(python3dist(pip)) = %{pip_version}
+Provides: bundled(python3dist(setuptools)) = %{setuptools_version}
 %endif
 
 # There are files in the standard library that have python shebang.
@@ -591,8 +597,8 @@ so extensions for both versions can co-exist in the same directory.
 Requires: python-setuptools-wheel
 Requires: python-pip-wheel
 %else
-Provides: bundled(python3-pip) = 18.1
-Provides: bundled(python3-setuptools) = 40.6.2
+Provides: bundled(python3dist(pip)) = %{pip_version}
+Provides: bundled(python3dist(setuptools)) = %{setuptools_version}
 %endif
 
 # The description for the flat package
