@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel rc1
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Python
 
 
@@ -1525,6 +1525,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.11-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Tue Jun 30 2020 Petr Viktorin <pviktori@redhat.com> - 3.6.11-1
 - Update to 3.6.11 final
 
