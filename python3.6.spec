@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel rc1
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Python
 
 
@@ -388,6 +388,14 @@ Patch294: 00294-define-TLS-cipher-suite-on-build-time.patch
 # https://bugs.python.org/issue21131
 # https://github.com/python/cpython/commit/ac827edc493d3ac3f5b9b0cc353df1d4b418a9aa
 Patch343: 00343-faulthandler-gcc10.patch
+
+# 00351 # 62210578a7157342bd7cbf426f8934da31773c4d
+# Avoid infinite loop in the tarfile module
+#
+# Avoid infinite loop when reading specially crafted TAR files using the tarfile module
+# (CVE-2019-20907).
+# Fixed upstream: https://bugs.python.org/issue39017
+Patch351: 00351-avoid-infinite-loop-in-the-tarfile-module.patch
 
 # (New patches go here ^^^)
 #
@@ -1548,6 +1556,10 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Fri Jul 31 2020 Charalampos Stratakis <cstratak@redhat.com> - 3.6.11-3
+- Avoid infinite loop when reading specially crafted TAR files (CVE-2019-20907)
+Resolves: rhbz#1856481
+
 * Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.11-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
