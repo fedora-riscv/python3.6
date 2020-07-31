@@ -397,6 +397,17 @@ Patch343: 00343-faulthandler-gcc10.patch
 # Fixed upstream: https://bugs.python.org/issue39017
 Patch351: 00351-avoid-infinite-loop-in-the-tarfile-module.patch
 
+# 00352 # 5253c417a23b3658fa115d2c72fa54b20293a31c
+# Resolve hash collisions for IPv4Interface and IPv6Interface
+#
+# CVE-2020-14422
+# The hash() methods of classes IPv4Interface and IPv6Interface had issue
+# of generating constant hash values of 32 and 128 respectively causing hash collisions.
+# The fix uses the hash() function to generate hash values for the objects
+# instead of XOR operation.
+# Fixed upstream: https://bugs.python.org/issue41004
+Patch352: 00352-resolve-hash-collisions-for-ipv4interface-and-ipv6interface.patch
+
 # (New patches go here ^^^)
 #
 # When adding new patches to "python" and "python3" in Fedora, EL, etc.,
@@ -1559,6 +1570,8 @@ CheckPython optimized
 * Fri Jul 31 2020 Charalampos Stratakis <cstratak@redhat.com> - 3.6.11-3
 - Avoid infinite loop when reading specially crafted TAR files (CVE-2019-20907)
 Resolves: rhbz#1856481
+- Resolve hash collisions for Pv4Interface and IPv6Interface (CVE-2020-14422)
+Resolves: rhbz#1854926
 
 * Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.11-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
