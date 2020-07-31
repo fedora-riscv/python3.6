@@ -1,4 +1,4 @@
-From b001d1d5f19eb2be1c89fdbb46b592200d6042fb Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Michal Cyprian <m.cyprian@gmail.com>
 Date: Mon, 26 Jun 2017 16:32:56 +0200
 Subject: [PATCH] 00251: Change user install location
@@ -59,6 +59,3 @@ index 58115f1c08..dca42616d8 100644
      for sitedir in getsitepackages(prefixes):
          if os.path.isdir(sitedir):
              addsitedir(sitedir, known_paths)
--- 
-2.26.2
-

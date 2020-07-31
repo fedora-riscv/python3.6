@@ -1,4 +1,4 @@
-From 0944f5b62e3227e2330312011a5f7ddfa7ad86f9 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nick Coghlan <ncoghlan@redhat.com>
 Date: Fri, 19 Jun 2020 17:02:52 +0200
 Subject: [PATCH] 00262: PEP538 - Coerce legacy C locale
@@ -930,6 +930,3 @@ index 7bf4c6fb4c..f764536d65 100644
  # Check for Valgrind support
  AC_MSG_CHECKING([for --with-valgrind])
  AC_ARG_WITH([valgrind],
--- 
-2.26.2
-

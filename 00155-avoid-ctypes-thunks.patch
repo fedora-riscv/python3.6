@@ -1,4 +1,4 @@
-From 72c7d5be3893e3b77701c77c84247ea0062dd089 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: David Malcolm <dmalcolm@redhat.com>
 Date: Fri, 19 Jun 2020 16:02:24 +0200
 Subject: [PATCH] 00155: avoid allocating thunks in ctypes unless absolutely
@@ -28,6 +28,3 @@ index f8709683fb..2ffe440150 100644
  
  def create_unicode_buffer(init, size=None):
      """create_unicode_buffer(aString) -> character array
--- 
-2.26.2
-

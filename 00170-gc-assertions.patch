@@ -1,4 +1,4 @@
-From f4d25a8fcf43f89fb58e6d288e50d993dd84afb6 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: David Malcolm <dmalcolm@redhat.com>
 Date: Fri, 19 Jun 2020 16:05:07 +0200
 Subject: [PATCH] 00170: In debug builds, try to print repr() when a C-level
@@ -333,6 +333,3 @@ index e1a0569ab9..9a28521dc4 100644
  #ifndef Py_TRACE_REFS
  /* For Py_LIMITED_API, we need an out-of-line version of _Py_Dealloc.
     Define this here, so we can undefine the macro. */
--- 
-2.26.2
-

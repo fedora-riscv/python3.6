@@ -1,4 +1,4 @@
-From b1a28dd9d73bbf489f49be6c6e2eec530ba489d1 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: David Malcolm <dmalcolm@redhat.com>
 Date: Fri, 19 Jun 2020 16:57:09 +0200
 Subject: [PATCH] 00160: Disable test_fs_holes in RPM build
@@ -23,6 +23,3 @@ index 2dae473327..c893ecbdc6 100644
      @unittest.skipUnless(hasattr(os, 'SEEK_HOLE'),
                           "test needs an OS that reports file holes")
      def test_fs_holes(self):
--- 
-2.26.2
-

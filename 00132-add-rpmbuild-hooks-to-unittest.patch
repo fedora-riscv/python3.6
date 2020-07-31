@@ -1,4 +1,4 @@
-From 99f5b37ff4e1a98d3672f15afb741bfe12c9361e Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: David Malcolm <dmalcolm@redhat.com>
 Date: Fri, 19 Jun 2020 16:54:05 +0200
 Subject: [PATCH] 00132: Add rpmbuild hooks to unittest
@@ -72,6 +72,3 @@ index 402fa47f28..8329d47882 100644
  class _AssertRaisesBaseContext(_BaseTestCaseContext):
  
      def __init__(self, expected, test_case, expected_regex=None):
--- 
-2.26.2
-

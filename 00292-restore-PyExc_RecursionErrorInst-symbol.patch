@@ -1,4 +1,4 @@
-From 350592aecc1c62c4f4ef9f8ebc3394095c974c00 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Charalampos Stratakis <cstratak@redhat.com>
 Date: Fri, 19 Jun 2020 17:06:08 +0200
 Subject: [PATCH] 00292: Restore PyExc_RecursionErrorInst symbol
@@ -92,6 +92,3 @@ index 4fc4a6814e..ff70718fc3 100644
    PyExc_ReferenceError=python36.PyExc_ReferenceError DATA
    PyExc_ResourceWarning=python36.PyExc_ResourceWarning DATA
    PyExc_RuntimeError=python36.PyExc_RuntimeError DATA
--- 
-2.26.2
-

@@ -1,4 +1,4 @@
-From f211c52df798ffad41477dc30b3de2b6442873b6 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: David Malcolm <dmalcolm@redhat.com>
 Date: Fri, 19 Jun 2020 16:58:24 +0200
 Subject: [PATCH] 00163: Disable parts of test_socket in RPM build
@@ -21,6 +21,3 @@ index 95c3938ac2..abb2356f47 100644
      def testRecvmsgEOF(self):
          # Receive end-of-stream indicator (b"", peer socket closed).
          msg, ancdata, flags, addr = self.doRecvmsg(self.serv_sock, 1024)
--- 
-2.26.2
-
