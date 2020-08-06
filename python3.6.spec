@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Python
 
 
@@ -408,6 +408,27 @@ Patch351: 00351-avoid-infinite-loop-in-the-tarfile-module.patch
 # Fixed upstream: https://bugs.python.org/issue41004
 Patch352: 00352-resolve-hash-collisions-for-ipv4interface-and-ipv6interface.patch
 
+# 00353 # f3c11e227c715450b3c1e945a5004e84cce41a58
+# Original names for architectures with different names downstream
+#
+# Pythons in RHEL/Fedora use different names for some architectures
+# than upstream and other distros (for example ppc64 vs. powerpc64).
+# See patch 274.
+# That means that an extension built with the default upstream settings
+# (on other distro or as an manylinux wheel) cannot be found by Python
+# on RHEL/Fedora because it has a different suffix.
+# This patch adds the original names to importlib so Python is able
+# to import extensions with an original architecture name in its
+# file name.
+#
+# WARNING: This patch has no effect on Python built with bootstrap
+# enabled because Python/importlib_external.h is not regenerated
+# and therefore Python during bootstrap contains importlib from
+# upstream without this feature. It's possible to include
+# Python/importlib_external.h to this patch but it'd make rebasing
+# a nightmare because it's basically a binary file.
+Patch353: 00353-Original-names-for-architectures-with-different-name.patch
+
 # (New patches go here ^^^)
 #
 # When adding new patches to "python" and "python3" in Fedora, EL, etc.,
@@ -773,6 +794,9 @@ BuildPython() {
 %endif
   $ExtraConfigArgs \
   %{nil}
+
+  # Regenerate generated importlib frozen modules (see patch 353)
+  %make_build EXTRA_CFLAGS="$CFLAGS $MoreCFlags" regen-importlib
 
   # Invoke the build
   %make_build EXTRA_CFLAGS="$CFLAGS $MoreCFlags"
@@ -1567,6 +1591,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Mon Aug 03 2020 Lumír Balhar <lbalhar@redhat.com> - 3.6.11-4
+- Add support for upstream architectures' names (patch 353)
+
 * Fri Jul 31 2020 Charalampos Stratakis <cstratak@redhat.com> - 3.6.11-3
 - Avoid infinite loop when reading specially crafted TAR files (CVE-2019-20907)
 Resolves: rhbz#1856481
