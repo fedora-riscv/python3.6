@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: Python
 
 
@@ -721,6 +721,12 @@ rm configure pyconfig.h.in
 # ======================================================
 
 %build
+
+# The build process embeds version info extracted from the Git repository
+# into the Py_GetBuildInfo and sys.version strings.
+# Our Git repository is artificial, so we don't want that.
+# Tell configure to not use git.
+export HAS_GIT=not-found
 
 # Regenerate the configure script and pyconfig.h.in
 autoconf
@@ -1591,6 +1597,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Wed Aug 12 2020 Petr Viktorin <pviktori@redhat.com> - 3.6.11-5
+- In sys.version and initial REPL message, list the source commit as "default"
+
 * Mon Aug 03 2020 Lumír Balhar <lbalhar@redhat.com> - 3.6.11-4
 - Add support for upstream architectures' names (patch 353)
 
