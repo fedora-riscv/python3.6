@@ -13,11 +13,11 @@ URL: https://www.python.org/
 
 #  WARNING  When rebasing to a new Python version,
 #           remember to update the python3-docs package as well
-%global general_version %{pybasever}.11
+%global general_version %{pybasever}.12
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 5%{?dist}
+Release: 1%{?dist}
 License: Python
 
 
@@ -388,25 +388,6 @@ Patch294: 00294-define-TLS-cipher-suite-on-build-time.patch
 # https://bugs.python.org/issue21131
 # https://github.com/python/cpython/commit/ac827edc493d3ac3f5b9b0cc353df1d4b418a9aa
 Patch343: 00343-faulthandler-gcc10.patch
-
-# 00351 # 62210578a7157342bd7cbf426f8934da31773c4d
-# Avoid infinite loop in the tarfile module
-#
-# Avoid infinite loop when reading specially crafted TAR files using the tarfile module
-# (CVE-2019-20907).
-# Fixed upstream: https://bugs.python.org/issue39017
-Patch351: 00351-avoid-infinite-loop-in-the-tarfile-module.patch
-
-# 00352 # 5253c417a23b3658fa115d2c72fa54b20293a31c
-# Resolve hash collisions for IPv4Interface and IPv6Interface
-#
-# CVE-2020-14422
-# The hash() methods of classes IPv4Interface and IPv6Interface had issue
-# of generating constant hash values of 32 and 128 respectively causing hash collisions.
-# The fix uses the hash() function to generate hash values for the objects
-# instead of XOR operation.
-# Fixed upstream: https://bugs.python.org/issue41004
-Patch352: 00352-resolve-hash-collisions-for-ipv4interface-and-ipv6interface.patch
 
 # 00353 # f3c11e227c715450b3c1e945a5004e84cce41a58
 # Original names for architectures with different names downstream
@@ -1597,6 +1578,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Wed Aug 19 2020 Tomas Hrnciar <thrnciar@redhat.com> - 3.6.12-1
+- Update to 3.6.12
+
 * Wed Aug 12 2020 Petr Viktorin <pviktori@redhat.com> - 3.6.11-5
 - In sys.version and initial REPL message, list the source commit as "default"
 

@@ -25,10 +25,10 @@ a nightmare because it's basically a binary file.
  1 file changed, 29 insertions(+), 2 deletions(-)
 
 diff --git a/Lib/importlib/_bootstrap_external.py b/Lib/importlib/_bootstrap_external.py
-index 25a3f8c0e0..db4bb4d02d 100644
+index 9feec50842..60632a57bd 100644
 --- a/Lib/importlib/_bootstrap_external.py
 +++ b/Lib/importlib/_bootstrap_external.py
-@@ -1566,7 +1566,7 @@ def _get_supported_file_loaders():
+@@ -1361,7 +1361,7 @@ def _get_supported_file_loaders():
  
      Each item is a tuple (loader, suffixes).
      """
@@ -37,7 +37,7 @@ index 25a3f8c0e0..db4bb4d02d 100644
      source = SourceFileLoader, SOURCE_SUFFIXES
      bytecode = SourcelessFileLoader, BYTECODE_SUFFIXES
      return [extensions, source, bytecode]
-@@ -1622,7 +1622,7 @@ def _setup(_bootstrap_module):
+@@ -1428,7 +1428,7 @@ def _setup(_bootstrap_module):
  
      # Constants
      setattr(self_module, '_relax_case', _make_relax_case())
@@ -46,7 +46,7 @@ index 25a3f8c0e0..db4bb4d02d 100644
      if builtin_os == 'nt':
          SOURCE_SUFFIXES.append('.pyw')
          if '_d.pyd' in EXTENSION_SUFFIXES:
-@@ -1635,3 +1635,30 @@ def _install(_bootstrap_module):
+@@ -1441,3 +1441,30 @@ def _install(_bootstrap_module):
      supported_loaders = _get_supported_file_loaders()
      sys.path_hooks.extend([FileFinder.path_hook(*supported_loaders)])
      sys.meta_path.append(PathFinder)
