@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Python
 
 
@@ -75,6 +75,19 @@ License: Python
 %bcond_with valgrind
 %endif
 
+# https://fedoraproject.org/wiki/Changes/Python_Upstream_Architecture_Names
+# For a very long time we have converted "upstream architecture names" to "Fedora names".
+# This made sense at the time, see https://github.com/pypa/manylinux/issues/687#issuecomment-666362947
+# However, with manylinux wheels popularity growth, this is now a problem.
+# Wheels built on a Linux that doesn't do this were not compatible with ours and vice versa.
+# We now have a compatibility layer to workaround a problem,
+# but we also no longer use the legacy arch names in Fedora 34+.
+# This bcond controls the behavior. The defaults should be good for anybody.
+%if 0%{?fedora} >= 34 || 0%{?rhel} >= 9
+%bcond_with legacy_archnames
+%else
+%bcond_without legacy_archnames
+%endif
 
 # ==================================
 # Notes from bootstraping Python 3.6
@@ -127,8 +140,21 @@ License: Python
 %global LDVERSION_optimized %{pybasever}%{ABIFLAGS_optimized}
 %global LDVERSION_debug     %{pybasever}%{ABIFLAGS_debug}
 
-%global SOABI_optimized cpython-%{pyshortver}%{ABIFLAGS_optimized}-%{_arch}-linux%{_gnu}
-%global SOABI_debug     cpython-%{pyshortver}%{ABIFLAGS_debug}-%{_arch}-linux%{_gnu}
+# When we use the upstream arch triplets, we convert them from the legacy ones
+# This is reversed in prep when %%with legacy_archnames, so we keep both macros
+%global platform_triplet_legacy %{_arch}-linux%{_gnu}
+%global platform_triplet_upstream %{expand:%(echo %{platform_triplet_legacy} | sed -E \\
+    -e 's/^arm(eb)?-linux-gnueabi$/arm\\1-linux-gnueabihf/' \\
+    -e 's/^mips64(el)?-linux-gnu$/mips64\\1-linux-gnuabi64/' \\
+    -e 's/^ppc(64)?(le)?-linux-gnu$/powerpc\\1\\2-linux-gnu/')}
+%if %{with legacy_archnames}
+%global platform_triplet %{platform_triplet_legacy}
+%else
+%global platform_triplet %{platform_triplet_upstream}
+%endif
+
+%global SOABI_optimized cpython-%{pyshortver}%{ABIFLAGS_optimized}-%{platform_triplet}
+%global SOABI_debug     cpython-%{pyshortver}%{ABIFLAGS_debug}-%{platform_triplet}
 
 # All bytecode files are in a __pycache__ subdirectory, with a name
 # reflecting the version of the bytecode.
@@ -354,10 +380,6 @@ Patch251: 00251-change-user-install-location.patch
 # Original proposal: https://bugzilla.redhat.com/show_bug.cgi?id=1404918
 Patch262: 00262-pep538_coerce_legacy_c_locale.patch
 
-# 00274 # 4f787db88208be509a31af7505b6118b267e2583
-# Upstream uses Debian-style architecture naming, change to match Fedora
-Patch274: 00274-fix-arch-names.patch
-
 # 00292 # 7bee9c57be78ac9bb512ddc08b1f73271c494e4d
 # Restore PyExc_RecursionErrorInst symbol
 #
@@ -389,18 +411,22 @@ Patch294: 00294-define-TLS-cipher-suite-on-build-time.patch
 # https://github.com/python/cpython/commit/ac827edc493d3ac3f5b9b0cc353df1d4b418a9aa
 Patch343: 00343-faulthandler-gcc10.patch
 
-# 00353 # f3c11e227c715450b3c1e945a5004e84cce41a58
+# 00353 # ab4cc97b643cfe99f567e3a03e5617b507183771
 # Original names for architectures with different names downstream
 #
-# Pythons in RHEL/Fedora use different names for some architectures
+# https://fedoraproject.org/wiki/Changes/Python_Upstream_Architecture_Names
+#
+# Pythons in RHEL/Fedora used different names for some architectures
 # than upstream and other distros (for example ppc64 vs. powerpc64).
-# See patch 274.
-# That means that an extension built with the default upstream settings
-# (on other distro or as an manylinux wheel) cannot be found by Python
-# on RHEL/Fedora because it has a different suffix.
-# This patch adds the original names to importlib so Python is able
-# to import extensions with an original architecture name in its
+# This was patched in patch 274, now it is sedded if %%with legacy_archnames.
+#
+# That meant that an extension built with the default upstream settings
+# (on other distro or as an manylinux wheel) could not been found by Python
+# on RHEL/Fedora because it had a different suffix.
+# This patch adds the legacy names to importlib so Python is able
+# to import extensions with a legacy architecture name in its
 # file name.
+# It work both ways, so it support both %%with and %%without legacy_archnames.
 #
 # WARNING: This patch has no effect on Python built with bootstrap
 # enabled because Python/importlib_external.h is not regenerated
@@ -408,7 +434,7 @@ Patch343: 00343-faulthandler-gcc10.patch
 # upstream without this feature. It's possible to include
 # Python/importlib_external.h to this patch but it'd make rebasing
 # a nightmare because it's basically a binary file.
-Patch353: 00353-Original-names-for-architectures-with-different-name.patch
+Patch353: 00353-architecture-names-upstream-downstream.patch
 
 # (New patches go here ^^^)
 #
@@ -695,6 +721,12 @@ rm -r Modules/zlib
 # Remove files that should be generated by the build
 # (This is after patching, so that we can use patches directly from upstream)
 rm configure pyconfig.h.in
+
+# When we use the legacy arch names, we need to change them in configure.ac
+%if %{with legacy_archnames}
+sed -i configure.ac \
+    -e 's/\b%{platform_triplet_upstream}\b/%{platform_triplet_legacy}/'
+%endif
 
 
 # ======================================================
@@ -1351,8 +1383,8 @@ CheckPython optimized
 # "Makefile" and the config-32/64.h file are needed by
 # distutils/sysconfig.py:_init_posix(), so we include them in the core
 # package, along with their parent directories (bug 531901):
-%dir %{pylibdir}/config-%{LDVERSION_optimized}-%{_arch}-linux%{_gnu}/
-%{pylibdir}/config-%{LDVERSION_optimized}-%{_arch}-linux%{_gnu}/Makefile
+%dir %{pylibdir}/config-%{LDVERSION_optimized}-%{platform_triplet}/
+%{pylibdir}/config-%{LDVERSION_optimized}-%{platform_triplet}/Makefile
 %dir %{_includedir}/python%{LDVERSION_optimized}/
 %{_includedir}/python%{LDVERSION_optimized}/%{_pyconfig_h}
 
@@ -1368,9 +1400,9 @@ CheckPython optimized
 %{_bindir}/2to3-%{pybasever}
 %endif
 
-%{pylibdir}/config-%{LDVERSION_optimized}-%{_arch}-linux%{_gnu}/*
+%{pylibdir}/config-%{LDVERSION_optimized}-%{platform_triplet}/*
 %if %{without flatpackage}
-%exclude %{pylibdir}/config-%{LDVERSION_optimized}-%{_arch}-linux%{_gnu}/Makefile
+%exclude %{pylibdir}/config-%{LDVERSION_optimized}-%{platform_triplet}/Makefile
 %exclude %{_includedir}/python%{LDVERSION_optimized}/%{_pyconfig_h}
 %endif
 %{pylibdir}/distutils/command/wininst-*.exe
@@ -1534,7 +1566,7 @@ CheckPython optimized
 %{_libdir}/%{py_INSTSONAME_debug}
 
 # Analog of the -devel subpackage's files:
-%{pylibdir}/config-%{LDVERSION_debug}-%{_arch}-linux%{_gnu}
+%{pylibdir}/config-%{LDVERSION_debug}-%{platform_triplet}
 %{_includedir}/python%{LDVERSION_debug}
 %{_bindir}/python%{LDVERSION_debug}-config
 %{_bindir}/python%{LDVERSION_debug}-*-config
@@ -1578,6 +1610,10 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Mon Oct 05 2020 Miro Hrončok <mhroncok@redhat.com> - 3.6.12-3
+- Use upstream architecture names on Fedora 34+
+- https://fedoraproject.org/wiki/Changes/Python_Upstream_Architecture_Names
+
 * Mon Sep 21 2020 Miro Hrončok <mhroncok@redhat.com> - 3.6.12-2
 - Rebuilt for new %%extension flags
 - Fixes: rhbz#1877652
