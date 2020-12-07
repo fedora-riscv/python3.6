@@ -223,6 +223,7 @@ BuildRequires: libnsl2-devel
 BuildRequires: libtirpc-devel
 BuildRequires: libGL-devel
 BuildRequires: libX11-devel
+BuildRequires: make
 BuildRequires: ncurses-devel
 
 BuildRequires: pkgconfig
