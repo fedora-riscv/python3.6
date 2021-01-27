@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Python
 
 
@@ -1611,6 +1611,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.12-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Mon Oct 05 2020 Miro Hrončok <mhroncok@redhat.com> - 3.6.12-3
 - Use upstream architecture names on Fedora 34+
 - https://fedoraproject.org/wiki/Changes/Python_Upstream_Architecture_Names
