@@ -200,7 +200,7 @@ index 7365630a5e..ec366f019d 100644
                              PY_SSL_ERROR_ZERO_RETURN);
      PyModule_AddIntConstant(m, "SSL_ERROR_WANT_READ",
 diff --git a/configure.ac b/configure.ac
-index f2c455c8d9..619aa215e9 100644
+index f764536d65..d5ca7172ca 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -5663,6 +5663,42 @@ if test "$have_getrandom" = yes; then
