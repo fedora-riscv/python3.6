@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Python
 
 
@@ -436,6 +436,17 @@ Patch343: 00343-faulthandler-gcc10.patch
 # Python/importlib_external.h to this patch but it'd make rebasing
 # a nightmare because it's basically a binary file.
 Patch353: 00353-architecture-names-upstream-downstream.patch
+
+# 00358 # cd155152db2f3f64831ecc5bd174a72c3bac401f
+# align allocations and PyGC_Head to 16 bytes on 64-bit platforms
+#
+# Upstream bug: https://bugs.python.org/issue27987
+# Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=1923658
+#
+# Combination of two upstream commits:
+# - 1b85f4ec45a5d63188ee3866bd55eb29fdec7fbf
+# - 8766cb74e186d3820db0a855ccd780d6d84461f7
+Patch358: 00358-align-allocations-and-pygc_head-to-16-bytes-on-64-bit-platforms.patch
 
 # (New patches go here ^^^)
 #
@@ -1611,6 +1622,10 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Thu Feb 25 2021 Petr Viktorin <pviktori@redhat.com> - 3.6.13-2
+- Fix alignment issue causing failures on x86-64
+  Resolves: https://bugzilla.redhat.com/show_bug.cgi?id=1923658
+
 * Tue Feb 16 2021 Tomas Hrnciar <thrnciar@redhat.com> - 3.6.13-1
 - Update to 3.6.13
 
