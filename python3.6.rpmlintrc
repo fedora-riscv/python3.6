@@ -71,5 +71,9 @@ addFilter(r'macro-in-comment %\{_pyconfig(32|64)_h\}')
 # Python modules don't need to be linked against libc
 addFilter(r'(E|W): library-not-linked-against-libc /usr/lib(64)?/python3.\d/lib-dynload/')
 
+# specfile-errors are listed twice, once with reason and once without
+# we filter out the empty ones
+addFilter(r'\bpython3(\.\d+)?\.(src|spec): (E|W): specfile-error\s+$')
+
 # SPELLING ERRORS
 addFilter(r'spelling-error .* en_US (bytecode|pyc|filename|tkinter|namespaces|pytest) ')
