@@ -41,6 +41,8 @@ addFilter(r'^python3(\.\d)?-(debug|tkinter|test|idle)\.[^:]+: (E|W): no-document
 # platform python is obsoleted, but not provided
 addFilter(r'obsolete-not-provided platform-python')
 
+# we have extra tokens at the end of %endif/%else directives, we consider them useful
+addFilter(r'extra tokens at the end of %(endif|else) directive') 
 
 # RPMLINT IMPERFECTIONS:
 # ifarch applied patches are OK
