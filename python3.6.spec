@@ -704,6 +704,9 @@ or older Fedora releases.
 %gpgverify -k2 -s1 -d0
 %autosetup -S git_am -N -n Python-%{upstream_version}
 
+# Temporary workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1954999
+%{?!apply_patch:%define apply_patch(qp:m:) {%__apply_patch %**}}
+
 # Apply initial patches manually
 %apply_patch -q %{PATCH1}
 
