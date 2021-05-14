@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Python
 
 
@@ -166,6 +166,13 @@ License: Python
 #   foo/__pycache__/bar.cpython-%%{pyshortver}.opt-1.pyc
 #   foo/__pycache__/bar.cpython-%%{pyshortver}.opt-2.pyc
 %global bytecode_suffixes .cpython-%{pyshortver}*.pyc
+
+# libmpdec (mpdecimal package in Fedora) is tightly coupled with the
+# decimal module. We keep it bundled as to avoid incompatibilities
+# with the packaged version.
+# The version information can be found at Modules/_decimal/libmpdec/mpdecimal.h
+# defined as MPD_VERSION.
+%global libmpdec_version 2.4.2
 
 # Python's configure script defines SOVERSION, and this is used in the Makefile
 # to determine INSTSONAME, the name of the libpython DSO:
@@ -539,6 +546,10 @@ Provides: bundled(python3dist(pip)) = %{pip_version}
 Provides: bundled(python3dist(setuptools)) = %{setuptools_version}
 %endif
 
+# Provides for the bundled libmpdec
+Provides: bundled(mpdecimal) = %{libmpdec_version}
+Provides: bundled(libmpdec) = %{libmpdec_version}
+
 # There are files in the standard library that have python shebang.
 # We've filtered the automatic requirement out so libs are installable without
 # the main package. This however makes it pulled in by default.
@@ -683,6 +694,10 @@ Requires: python-pip-wheel
 Provides: bundled(python3dist(pip)) = %{pip_version}
 Provides: bundled(python3dist(setuptools)) = %{setuptools_version}
 %endif
+
+# Provides for the bundled libmpdec
+Provides: bundled(mpdecimal) = %{libmpdec_version}
+Provides: bundled(libmpdec) = %{libmpdec_version}
 
 # The description for the flat package
 %description
@@ -1110,6 +1125,11 @@ for Module in %{buildroot}/%{dynload_dir}/*.so ; do
         ;;
     esac
 done
+
+# Verify that the bundled libmpdec version python was compiled with, is the same version we have virtual
+# provides for in the SPEC.
+test "$(LD_LIBRARY_PATH=$(pwd)/build/optimized $(pwd)/build/optimized/python -c 'import decimal; print(decimal.__libmpdec_version__)')" = \
+     "%{libmpdec_version}"
 
 # ======================================================
 # Running the upstream test suite
@@ -1625,6 +1645,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Fri May 14 2021 Charalampos Stratakis <cstratak@redhat.com> - 3.6.13-3
+- Add virtual provides for the bundled libmpdec (rhbz#1943359)
+
 * Thu Feb 25 2021 Petr Viktorin <pviktori@redhat.com> - 3.6.13-2
 - Fix alignment issue causing failures on x86-64
   Resolves: https://bugzilla.redhat.com/show_bug.cgi?id=1923658
