@@ -11,8 +11,12 @@
     - smoke:
         dir: python/smoke
         run: VERSION=3.6 ./venv.sh
+    - marshalparser:
+        dir: python/marshalparser
+        run: VERSION=3.6 SAMPLE=10 test_marshalparser_compatibility.sh
     required_packages:
     - gcc
     - python3-tox
     - python3.6
     - glibc-all-langpacks # for locale tests
+    - marshalparser  # for testing compatibility (magic numbers) with marshalparser
