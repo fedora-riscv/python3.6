@@ -13,11 +13,11 @@ URL: https://www.python.org/
 
 #  WARNING  When rebasing to a new Python version,
 #           remember to update the python3-docs package as well
-%global general_version %{pybasever}.13
+%global general_version %{pybasever}.14
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 3%{?dist}
+Release: 1%{?dist}
 License: Python
 
 
@@ -1645,6 +1645,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Tue Jun 29 2021 Tomas Hrnciar <thrnciar@redhat.com> - 3.6.14-1
+- Update to 3.6.14
+
 * Fri May 14 2021 Charalampos Stratakis <cstratak@redhat.com> - 3.6.13-3
 - Add virtual provides for the bundled libmpdec (rhbz#1943359)
 
