@@ -13,11 +13,11 @@ URL: https://www.python.org/
 
 #  WARNING  When rebasing to a new Python version,
 #           remember to update the python3-docs package as well
-%global general_version %{pybasever}.14
+%global general_version %{pybasever}.15
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: Python
 
 
@@ -406,13 +406,8 @@ Patch292: 00292-restore-PyExc_RecursionErrorInst-symbol.patch
 # See also: https://bugzilla.redhat.com/show_bug.cgi?id=1489816
 Patch294: 00294-define-TLS-cipher-suite-on-build-time.patch
 
-# 00343 # 2f4ec09a1daea8357f6a4a73c9f68d3fed3b1b96
+# 00343 # c758d1d3051b80314a533a8a42244beb4670141e
 # Fix test_faulthandler on GCC 10
-#
-# bpo-38965: Fix faulthandler._stack_overflow() on GCC 10
-# Fixed upstream and backported from the 3.7 branch:
-# https://bugs.python.org/issue38965
-# https://github.com/python/cpython/commit/f4a21d3b239bf4f4e4e2a8a5936b9b040645b246
 #
 # bpo-21131: Fix faulthandler.register(chain=True) stack (GH-15276)
 # https://bugs.python.org/issue21131
@@ -1645,6 +1640,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Sun Sep 05 2021 Miro Hrončok <mhroncok@redhat.com> - 3.6.15-1
+- Update to 3.6.15
+
 * Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.14-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
