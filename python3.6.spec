@@ -239,7 +239,7 @@ BuildRequires: redhat-rpm-config >= 127
 BuildRequires: sqlite-devel
 BuildRequires: gdb
 
-BuildRequires: openssl-devel
+BuildRequires: openssl1.1-devel
 
 BuildRequires: tar
 BuildRequires: tcl-devel
@@ -1640,8 +1640,8 @@ CheckPython optimized
 # ======================================================
 
 %changelog
-* Tue Sep 14 2021 Sahana Prasad <sahana@redhat.com> - 3.6.15-2
-- Rebuilt with OpenSSL 3.0.0
+* Mon Sep 20 2021 Miro Hrončok <mhroncok@redhat.com> - 3.6.15-2
+- Explicitly buildrequire OpenSSL 1.1, as Python 3.6 is not compatible with OpenSSL 3.0
 
 * Sun Sep 05 2021 Miro Hrončok <mhroncok@redhat.com> - 3.6.15-1
 - Update to 3.6.15
