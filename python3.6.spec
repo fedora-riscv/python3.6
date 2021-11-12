@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Python
 
 
@@ -1640,6 +1640,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Fri Nov 12 2021 Björn Esser <besser82@fedoraproject.org> - 3.6.15-3
+- Rebuild(libnsl2)
+
 * Mon Sep 20 2021 Miro Hrončok <mhroncok@redhat.com> - 3.6.15-2
 - Explicitly buildrequire OpenSSL 1.1, as Python 3.6 is not compatible with OpenSSL 3.0
 
