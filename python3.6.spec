@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Python
 
 
@@ -1640,6 +1640,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Sat Jan 08 2022 Miro Hrončok <mhroncok@redhat.com> - 3.6.15-4
+- Rebuilt for https://fedoraproject.org/wiki/Changes/LIBFFI34
+
 * Fri Nov 12 2021 Björn Esser <besser82@fedoraproject.org> - 3.6.15-3
 - Rebuild(libnsl2)
 
