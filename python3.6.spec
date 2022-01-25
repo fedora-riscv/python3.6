@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: Python
 
 
@@ -449,6 +449,13 @@ Patch353: 00353-architecture-names-upstream-downstream.patch
 # - 1b85f4ec45a5d63188ee3866bd55eb29fdec7fbf
 # - 8766cb74e186d3820db0a855ccd780d6d84461f7
 Patch358: 00358-align-allocations-and-pygc_head-to-16-bytes-on-64-bit-platforms.patch
+
+# 00375 # 5488ab84d2447aa8df8b3502e76f151ac2488947
+# Fix test_distance to enable build on i686
+#
+# Fix precision in test_distance (test.test_turtle.TestVec2D).
+# See: https://bugzilla.redhat.com/show_bug.cgi?id=2038843
+Patch375: 00375-fix-test_distance-to-enable-build-on-i686.patch
 
 # (New patches go here ^^^)
 #
@@ -1640,6 +1647,10 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Tue Jan 25 2022 Karolina Surma <ksurma@redhat.com> - 3.6.15-6
+- Fix test to enable build with i686
+Resolves: rhbz#2038843
+
 * Fri Jan 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.15-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
