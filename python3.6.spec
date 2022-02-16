@@ -17,8 +17,38 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 6%{?dist}
-License: Python
+Release: 7%{?dist}
+# Python is Python
+# pip MIT is and bundles:
+#   appdirs: MIT
+#   distlib: Python
+#   distro: ASL 2.0
+#   html5lib: MIT
+#   six: MIT
+#   colorama: BSD
+#   cachecontrol: ASL 2.0
+#   msgpack-python: ASL 2.0
+#   lockfile: MIT
+#   progress: ISC
+#   ipaddress: Python
+#   packaging: ASL 2.0 or BSD
+#   pep517: MIT
+#   pyparsing: MIT
+#   pytoml: MIT
+#   retrying: ASL 2.0
+#   requests: ASL 2.0
+#   chardet: LGPLv2
+#   idna: BSD
+#   urllib3: MIT
+#   certifi: MPLv2.0
+#   setuptools: MIT
+#   webencodings: BSD
+# setuptools is MIT and bundles:
+#   packaging: ASL 2.0 or BSD
+#   pyparsing: MIT
+#   six: MIT
+#   appdirs: MIT
+License: Python and MIT and ASL 2.0 and BSD and ISC and LGPLv2 and MPLv2.0 and (ASL 2.0 or BSD)
 
 
 # ==================================
@@ -37,7 +67,8 @@ License: Python
 
 # Whether to use RPM build wheels from the python-{pip,setuptools}-wheel package
 # Uses upstream bundled prebuilt wheels otherwise
-%bcond_without rpmwheels
+# pip 22 no longer supports Python 3.6
+%bcond_with rpmwheels
 
 # Expensive optimizations (mainly, profile-guided optimizations)
 %ifarch %{ix86} x86_64
@@ -362,12 +393,6 @@ Patch170: 00170-gc-assertions.patch
 #
 # We keep them in /usr/share/python-wheels
 Patch189: 00189-use-rpm-wheels.patch
-# The following versions of setuptools/pip are bundled when this patch is not applied.
-# The versions are written in Lib/ensurepip/__init__.py, this patch removes them.
-# When the bundled setuptools/pip wheel is updated, the patch no longer applies cleanly.
-# In such cases, the patch needs to be amended and the versions updated here:
-%global pip_version 18.1
-%global setuptools_version 40.6.2
 
 # 00251 # 2eabd04356402d488060bc8fe316ad13fc8a3356
 # Change user install location
@@ -544,8 +569,39 @@ Summary:        Python runtime libraries
 Requires: python-setuptools-wheel
 Requires: python-pip-wheel
 %else
-Provides: bundled(python3dist(pip)) = %{pip_version}
-Provides: bundled(python3dist(setuptools)) = %{setuptools_version}
+# Versions of bundled libs are based on:
+# https://github.com/pypa/pip/blob/18.1/src/pip/_vendor/vendor.txt and
+# https://github.com/pypa/setuptools/blob/v40.6.2/pkg_resources/_vendor/vendored.txt
+Provides: bundled(python3dist(pip)) = 18.1
+Provides: bundled(python3dist(appdirs)) = 1.4.3
+Provides: bundled(python3dist(distlib)) = 0.2.7
+Provides: bundled(python3dist(distro)) = 1.3
+Provides: bundled(python3dist(html5lib)) = 1.0.1
+Provides: bundled(python3dist(six)) = 1.11
+Provides: bundled(python3dist(colorama)) = 0.3.9
+Provides: bundled(python3dist(cachecontrol)) = 0.12.5
+Provides: bundled(python3dist(msgpack-python)) = 0.5.6
+Provides: bundled(python3dist(lockfile)) = 0.12.2
+Provides: bundled(python3dist(progress)) = 1.4
+Provides: bundled(python3dist(ipaddress)) = 1.0.22
+Provides: bundled(python3dist(packaging)) = 18
+Provides: bundled(python3dist(pep517)) = 0.2
+Provides: bundled(python3dist(pyparsing)) = 2.2.1
+Provides: bundled(python3dist(pytoml)) = 0.1.19
+Provides: bundled(python3dist(retrying)) = 1.3.3
+Provides: bundled(python3dist(requests)) = 2.19.1
+Provides: bundled(python3dist(chardet)) = 3.0.4
+Provides: bundled(python3dist(idna)) = 2.7
+Provides: bundled(python3dist(urllib3)) = 1.23
+Provides: bundled(python3dist(certifi)) = 2018.8.24
+Provides: bundled(python3dist(setuptools)) = 40.4.3
+Provides: bundled(python3dist(webencodings)) = 0.5.1
+
+Provides: bundled(python3dist(setuptools)) = 40.6.2
+Provides: bundled(python3dist(packaging)) = 16.8
+Provides: bundled(python3dist(pyparsing)) = 2.2.1
+Provides: bundled(python3dist(six)) = 1.10
+Provides: bundled(python3dist(appdirs)) = 1.4.3
 %endif
 
 # Provides for the bundled libmpdec
@@ -693,8 +749,39 @@ so extensions for both versions can co-exist in the same directory.
 Requires: python-setuptools-wheel
 Requires: python-pip-wheel
 %else
-Provides: bundled(python3dist(pip)) = %{pip_version}
-Provides: bundled(python3dist(setuptools)) = %{setuptools_version}
+# Versions of bundled libs are based on:
+# https://github.com/pypa/pip/blob/18.1/src/pip/_vendor/vendor.txt and
+# https://github.com/pypa/setuptools/blob/v40.6.2/pkg_resources/_vendor/vendored.txt
+Provides: bundled(python3dist(pip)) = 18.1
+Provides: bundled(python3dist(appdirs)) = 1.4.3
+Provides: bundled(python3dist(distlib)) = 0.2.7
+Provides: bundled(python3dist(distro)) = 1.3
+Provides: bundled(python3dist(html5lib)) = 1.0.1
+Provides: bundled(python3dist(six)) = 1.11
+Provides: bundled(python3dist(colorama)) = 0.3.9
+Provides: bundled(python3dist(cachecontrol)) = 0.12.5
+Provides: bundled(python3dist(msgpack-python)) = 0.5.6
+Provides: bundled(python3dist(lockfile)) = 0.12.2
+Provides: bundled(python3dist(progress)) = 1.4
+Provides: bundled(python3dist(ipaddress)) = 1.0.22
+Provides: bundled(python3dist(packaging)) = 18
+Provides: bundled(python3dist(pep517)) = 0.2
+Provides: bundled(python3dist(pyparsing)) = 2.2.1
+Provides: bundled(python3dist(pytoml)) = 0.1.19
+Provides: bundled(python3dist(retrying)) = 1.3.3
+Provides: bundled(python3dist(requests)) = 2.19.1
+Provides: bundled(python3dist(chardet)) = 3.0.4
+Provides: bundled(python3dist(idna)) = 2.7
+Provides: bundled(python3dist(urllib3)) = 1.23
+Provides: bundled(python3dist(certifi)) = 2018.8.24
+Provides: bundled(python3dist(setuptools)) = 40.4.3
+Provides: bundled(python3dist(webencodings)) = 0.5.1
+
+Provides: bundled(python3dist(setuptools)) = 40.6.2
+Provides: bundled(python3dist(packaging)) = 16.8
+Provides: bundled(python3dist(pyparsing)) = 2.2.1
+Provides: bundled(python3dist(six)) = 1.10
+Provides: bundled(python3dist(appdirs)) = 1.4.3
 %endif
 
 # Provides for the bundled libmpdec
@@ -1647,6 +1734,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Wed Feb 16 2022 Lumír Balhar <lbalhar@redhat.com> - 3.6.15-7
+- Switch from system wheels to bundled ones
+
 * Tue Jan 25 2022 Karolina Surma <ksurma@redhat.com> - 3.6.15-6
 - Fix test to enable build with i686
 Resolves: rhbz#2038843
