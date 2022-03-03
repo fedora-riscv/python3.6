@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Python
 
 
@@ -449,6 +449,27 @@ Patch353: 00353-architecture-names-upstream-downstream.patch
 # - 1b85f4ec45a5d63188ee3866bd55eb29fdec7fbf
 # - 8766cb74e186d3820db0a855ccd780d6d84461f7
 Patch358: 00358-align-allocations-and-pygc_head-to-16-bytes-on-64-bit-platforms.patch
+
+# 00378 # b0c3e36a85f7eec22d64222176ea5139c0bc097d
+# Support expat 2.4.5
+#
+# Curly brackets were never allowed in namespace URIs
+# according to RFC 3986, and so-called namespace-validating
+# XML parsers have the right to reject them a invalid URIs.
+#
+# libexpat >=2.4.5 has become strcter in that regard due to
+# related security issues; with ET.XML instantiating a
+# namespace-aware parser under the hood, this test has no
+# future in CPython.
+#
+# References:
+# - https://datatracker.ietf.org/doc/html/rfc3968
+# - https://www.w3.org/TR/xml-names/
+#
+# Also, test_minidom.py: Support Expat >=2.4.5
+#
+# Upstream: https://bugs.python.org/issue46811
+Patch378: 00378-support-expat-2-4-5.patch
 
 # (New patches go here ^^^)
 #
@@ -1640,6 +1661,10 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Thu Mar 03 2022 Charalampos Stratakis <cstratak@redhat.com> - 3.6.15-2
+- Fix the test suite support for Expat >= 2.4.5
+Resolves: rhbz#2056970
+
 * Sun Sep 05 2021 Miro Hrončok <mhroncok@redhat.com> - 3.6.15-1
 - Update to 3.6.15
 
