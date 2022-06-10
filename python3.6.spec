@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: Python
 
 
@@ -477,6 +477,16 @@ Patch375: 00375-fix-test_distance-to-enable-build-on-i686.patch
 #
 # Upstream: https://bugs.python.org/issue46811
 Patch378: 00378-support-expat-2-4-5.patch
+
+# 00382 # 9e275dcdf3934b827994ecc3247d583d5bab7985
+# CVE-2015-20107
+#
+# Make mailcap refuse to match unsafe filenames/types/params (GH-91993)
+#
+# Upstream: https://github.com/python/cpython/issues/68966
+#
+# Tracker bug: https://bugzilla.redhat.com/show_bug.cgi?id=2075390
+Patch382: 00382-cve-2015-20107.patch
 
 # (New patches go here ^^^)
 #
@@ -1668,6 +1678,10 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Fri Jun 10 2022 Charalampos Stratakis <cstratak@redhat.com> - 3.6.15-9
+- Security fix for CVE-2015-20107
+Resolves: rhbz#2075390
+
 * Thu Mar 03 2022 Charalampos Stratakis <cstratak@redhat.com> - 3.6.15-8
 - Fix the test suite support for Expat >= 2.4.5
 Resolves: rhbz#2056970
