@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 9%{?dist}
+Release: 10%{?dist}
 License: Python
 
 
@@ -405,6 +405,15 @@ Patch292: 00292-restore-PyExc_RecursionErrorInst-symbol.patch
 # https://bugs.python.org/issue31429
 # See also: https://bugzilla.redhat.com/show_bug.cgi?id=1489816
 Patch294: 00294-define-TLS-cipher-suite-on-build-time.patch
+
+# 00319 # 137b120c34cd92a9694edc0196f0d78311071dba
+# test_tarfile_ppc64
+#
+# Fix sparse file tests of test_tarfile on ppc64le with the tmpfs
+# filesystem.
+#
+# Upstream: https://bugs.python.org/issue35772
+Patch319: 00319-test_tarfile_ppc64.patch
 
 # 00343 # c758d1d3051b80314a533a8a42244beb4670141e
 # Fix test_faulthandler on GCC 10
@@ -1678,6 +1687,10 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Wed Jul 20 2022 Charalampos Stratakis <cstratak@redhat.com> - 3.6.15-10
+- Fix test_tarfile on ppc64le
+Resolves: rhbz#2109120
+
 * Fri Jun 10 2022 Charalampos Stratakis <cstratak@redhat.com> - 3.6.15-9
 - Security fix for CVE-2015-20107
 Resolves: rhbz#2075390
