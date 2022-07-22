@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 10%{?dist}
+Release: 11%{?dist}
 # Python is Python
 # pip MIT is and bundles:
 #   appdirs: MIT
@@ -1774,6 +1774,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.15-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Wed Jul 20 2022 Charalampos Stratakis <cstratak@redhat.com> - 3.6.15-10
 - Fix test_tarfile on ppc64le
 Resolves: rhbz#2109120
