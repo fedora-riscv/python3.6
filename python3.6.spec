@@ -848,25 +848,22 @@ or older Fedora releases.
 %gpgverify -k2 -s1 -d0
 %autosetup -S git_am -N -n Python-%{upstream_version}
 
-# Temporary workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1954999
-%{?!apply_patch:%define apply_patch(qp:m:) {%__apply_patch %**}}
-
 # Apply initial patches manually
-%apply_patch -q %{PATCH1}
+%autopatch 1
 
 %if "%{_lib}" == "lib64"
-%apply_patch -q %{PATCH102}
+%autopatch 102
 %endif
 
-%apply_patch -q %{PATCH111}
-%apply_patch -q %{PATCH132}
-%apply_patch -q %{PATCH155}
-%apply_patch -q %{PATCH160}
-%apply_patch -q %{PATCH163}
-%apply_patch -q %{PATCH170}
+%autopatch 111
+%autopatch 132
+%autopatch 155
+%autopatch 160
+%autopatch 163
+%autopatch 170
 
 %if %{with rpmwheels}
-%apply_patch -q %{PATCH189}
+%autopatch 189
 rm Lib/ensurepip/_bundled/*.whl
 %endif
 
