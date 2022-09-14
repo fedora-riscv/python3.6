@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 11%{?dist}
+Release: 12%{?dist}
 # Python is Python
 # pip MIT is and bundles:
 #   appdirs: MIT
@@ -527,6 +527,20 @@ Patch378: 00378-support-expat-2-4-5.patch
 #
 # Tracker bug: https://bugzilla.redhat.com/show_bug.cgi?id=2075390
 Patch382: 00382-cve-2015-20107.patch
+
+# 00386 # 0e4bced7d3cd0f94ebfbcc209e10dbf81607b073
+# CVE-2021-28861
+#
+# Fix an open redirection vulnerability in the `http.server` module when
+# an URI path starts with `//` that could produce a 301 Location header
+# with a misleading target.  Vulnerability discovered, and logic fix
+# proposed, by Hamza Avvan (@hamzaavvan).
+#
+# Test and comments authored by Gregory P. Smith [Google].
+#
+# Upstream: https://github.com/python/cpython/pull/93879
+# Tracking bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=2120642
+Patch386: 00386-cve-2021-28861.patch
 
 # (New patches go here ^^^)
 #
@@ -1777,6 +1791,10 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Wed Sep 14 2022 Lumír Balhar <lbalhar@redhat.com> - 3.6.15-12
+- Fix for CVE-2021-28861
+Resolves: rhbz#2120785
+
 * Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 3.6.15-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 
