@@ -393,6 +393,12 @@ Patch170: 00170-gc-assertions.patch
 #
 # We keep them in /usr/share/python-wheels
 Patch189: 00189-use-rpm-wheels.patch
+# The following versions of setuptools/pip are bundled when this patch is not applied.
+# The versions are written in Lib/ensurepip/__init__.py, this patch removes them.
+# When the bundled setuptools/pip wheel is updated, the patch no longer applies cleanly.
+# In such cases, the patch needs to be amended and the versions updated here:
+%global pip_version 18.1
+%global setuptools_version 40.6.2
 
 # 00251 # 2eabd04356402d488060bc8fe316ad13fc8a3356
 # Change user install location
@@ -792,7 +798,7 @@ Requires: python-pip-wheel
 # Versions of bundled libs are based on:
 # https://github.com/pypa/pip/blob/18.1/src/pip/_vendor/vendor.txt and
 # https://github.com/pypa/setuptools/blob/v40.6.2/pkg_resources/_vendor/vendored.txt
-Provides: bundled(python3dist(pip)) = 18.1
+Provides: bundled(python3dist(pip)) = %{pip_version}
 Provides: bundled(python3dist(appdirs)) = 1.4.3
 Provides: bundled(python3dist(distlib)) = 0.2.7
 Provides: bundled(python3dist(distro)) = 1.3
@@ -817,7 +823,7 @@ Provides: bundled(python3dist(certifi)) = 2018.8.24
 Provides: bundled(python3dist(setuptools)) = 40.4.3
 Provides: bundled(python3dist(webencodings)) = 0.5.1
 
-Provides: bundled(python3dist(setuptools)) = 40.6.2
+Provides: bundled(python3dist(setuptools)) = %{setuptools_version}
 Provides: bundled(python3dist(packaging)) = 16.8
 Provides: bundled(python3dist(pyparsing)) = 2.2.1
 Provides: bundled(python3dist(six)) = 1.10
