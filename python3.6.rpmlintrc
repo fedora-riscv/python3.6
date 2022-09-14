@@ -77,3 +77,9 @@ addFilter(r'\bpython3(\.\d+)?\.(src|spec): (E|W): specfile-error\s+$')
 
 # SPELLING ERRORS
 addFilter(r'spelling-error .* en_US (bytecode|pyc|filename|tkinter|namespaces|pytest) ')
+
+# These bundled provides are declared twice, as they're bundled twice
+# separately in pip and setuptools.
+addFilter(r'useless-provides bundled\(python3dist\(packaging\)\)')
+addFilter(r'useless-provides bundled\(python3dist\(setuptools\)\)')
+addFilter(r'useless-provides bundled\(python3dist\(six\)\)')
