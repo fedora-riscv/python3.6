@@ -17,7 +17,7 @@ URL: https://www.python.org/
 #global prerel ...
 %global upstream_version %{general_version}%{?prerel}
 Version: %{general_version}%{?prerel:~%{prerel}}
-Release: 22%{?dist}
+Release: 22.rv64%{?dist}
 # Python is Python
 # pip MIT is and bundles:
 #   appdirs: MIT
@@ -184,8 +184,13 @@ License: Python and MIT and ASL 2.0 and BSD and ISC and LGPLv2 and MPLv2.0 and (
 %global platform_triplet %{platform_triplet_upstream}
 %endif
 
+%ifarch riscv64
+%global SOABI_optimized cpython-%{pyshortver}%{ABIFLAGS_optimized}
+%global SOABI_debug     cpython-%{pyshortver}%{ABIFLAGS_debug}
+%else
 %global SOABI_optimized cpython-%{pyshortver}%{ABIFLAGS_optimized}-%{platform_triplet}
 %global SOABI_debug     cpython-%{pyshortver}%{ABIFLAGS_debug}-%{platform_triplet}
+%endif
 
 # All bytecode files are in a __pycache__ subdirectory, with a name
 # reflecting the version of the bytecode.
@@ -1430,8 +1435,13 @@ CheckPython() {
     -x test_distutils \
     -x test_bdist_rpm \
     -x test_gdb \
-    %ifarch ppc64le aarch64
+    %ifarch ppc64le aarch64 riscv64
     -x test_faulthandler \
+    %endif
+    %ifarch riscv64
+    -x test_posix \
+    -x test_socket \
+    -x test_zlib \
     %endif
     %ifarch %{mips64}
     -x test_ctypes \
@@ -1685,8 +1695,13 @@ CheckPython optimized
 # "Makefile" and the config-32/64.h file are needed by
 # distutils/sysconfig.py:_init_posix(), so we include them in the core
 # package, along with their parent directories (bug 531901):
+%ifarch riscv64
+%dir %{pylibdir}/config-%{LDVERSION_optimized}/
+%{pylibdir}/config-%{LDVERSION_optimized}/Makefile
+%else
 %dir %{pylibdir}/config-%{LDVERSION_optimized}-%{platform_triplet}/
 %{pylibdir}/config-%{LDVERSION_optimized}-%{platform_triplet}/Makefile
+%endif
 %dir %{_includedir}/python%{LDVERSION_optimized}/
 %{_includedir}/python%{LDVERSION_optimized}/%{_pyconfig_h}
 
@@ -1702,7 +1717,11 @@ CheckPython optimized
 %{_bindir}/2to3-%{pybasever}
 %endif
 
+%ifarch riscv64
+%{pylibdir}/config-%{LDVERSION_optimized}/*
+%else
 %{pylibdir}/config-%{LDVERSION_optimized}-%{platform_triplet}/*
+%endif
 %if %{without flatpackage}
 %exclude %{pylibdir}/config-%{LDVERSION_optimized}-%{platform_triplet}/Makefile
 %exclude %{_includedir}/python%{LDVERSION_optimized}/%{_pyconfig_h}
@@ -1912,6 +1931,9 @@ CheckPython optimized
 # ======================================================
 
 %changelog
+* Wed Jan 31 2024 Songsong Zhang <U2FsdGVkX1@gmail.com> - 3.6.15-22.rv64
+- Add riscv64 support
+
 * Mon Dec 18 2023 Lumír Balhar <lbalhar@redhat.com> - 3.6.15-22
 - Security fix for CVE-2023-27043 (rhbz#2196191)
 
